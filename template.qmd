@@ -1,0 +1,505 @@
+
+title: "Task1"
+author: "Martin Pančík"
+date: "28/10/2025"
+format:
+  html:
+    embed-resources: true
+editor: source
+
+## Question 1 title
+
+Banská Bystrica
+
+```{r}
+# code for solving task
+# numeric
+area_km2 <- 103.4
+elevation <- 362.3
+avg_temp <- 9.5
+avg_income <- 1250.75
+
+# integer
+population <- 77000L
+districts <- 8L
+parks <- 25L
+
+# logical
+has_university <- TRUE
+is_capital <- FALSE
+
+#character
+city_name <- "Banská Bystrica"
+region <- "Stredné Slovensko"
+category <- "Historické mesto"
+
+```
+
+
+## Question 2 title
+
+Question description
+
+```{r}
+# code for solving task
+# numeric
+numeric_vector <- c(avg_temp, area_km2, avg_income, elevation, population, districts, parks)
+
+# sequence
+seq_vector <- seq(from = 20, to = 100, by = 10)
+
+# logical
+logical_vector <- sample(c(TRUE, FALSE), 10, replace = TRUE)
+
+```
+
+
+## Question 3 title
+
+Martix
+
+```{r}
+# code for solving task
+# numeric
+city_matrix <- matrix(sample(-50:50, 9, replace = TRUE), nrow = 3, ncol = 3)
+
+# row and column name
+rownames(city_matrix) <- c("Centrum", "Sásová", "Radvaň")
+colnames(city_matrix) <- c("Teplota", "Znečistenie", "Doprava")
+
+# logical averages
+row_averages <- rowMeans(city_matrix)
+col_averages <- colMeans(city_matrix)
+
+```
+
+## Question 4 title
+
+List
+
+```{r}
+# Task 1 – správny list
+
+banska_bystrica_list <- list(
+  
+  # atomic variables
+  name = city_name,
+  region = region,
+  category = category,
+  
+  # vectors
+  numeric_vector = numeric_vector,
+  seq_vector = seq_vector,
+  logical_vector = logical_vector,
+  
+  # matrix + averages
+  city_matrix = city_matrix,
+  row_averages = row_averages,
+  col_averages = col_averages,
+  
+  # extra element
+  description = "Banská Bystrica je historické mesto v srdci Slovenska,
+  obklopené horami, známe SNP námestím a univerzitou Mateja Bela."
+)
+```
+
+
+## Question 5 title
+
+Factor
+
+```{r}
+# code for solving task
+# factor
+development_levels <- factor(c("high", "medium", "medium", "low", "medium", "high"))
+```
+
+## Question 6 title
+
+Data Frame
+
+```{r}
+# code for solving task
+# data frame
+districts_df <- data.frame(
+  district = c("Centrum", "Sásová", "Radvaň", "Podlavice", "Fončorda", "Uhlisko"),
+  population = c(16000, 23000, 15000, 8000, 18000, 9000),  # numeric
+  is_coastal = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE), # logical (BB nemá more)
+  development = factor(c("high", "medium", "medium", "low", "medium", "high")) # factor
+)
+
+# rename columns
+colnames(districts_df) <- c("District", "Population", "Coastal", "Development")
+
+# display structure and summary
+str(districts_df)
+summary(districts_df)
+
+```
+
+
+
+
+title: "Task 2 – Subsetting & Missing Data"
+output: html_document
+---------------------
+
+# Task 2 – Subsetting & Missing Data
+
+## 2.1 Querying Vectors
+
+```{r}
+# Vectors from Task 1
+seq_vector <- seq(from = 20, to = 100, by = 10)
+set.seed(42)
+logical_vector <- sample(c(TRUE, FALSE), 10, replace = TRUE)
+
+# 2.1.1 Sequence vector
+seq_vector[3]          # 3rd element
+seq_vector[2:5]        # elements 2 through 5
+seq_vector[seq_vector > 20]  # all values greater than 20
+
+# 2.1.2 Logical vector
+logical_vector[logical_vector]       # only TRUE values
+which(logical_vector)                # indices of TRUE values
+```
+
+## 2.2 Querying Your “Universe” List
+
+```{r}
+# Universe list from Task 1
+banska_bystrica_list <- list(
+  name = "Banská Bystrica",
+  region = "Stredné Slovensko",
+  category = "Historické mesto",
+  numeric_vector = c(9.5, 103.4, 1250.75, 362.3, 77000, 8, 25),
+  seq_vector = seq(from = 20, to = 100, by = 10),
+  logical_vector = logical_vector,
+  city_matrix = matrix(sample(-50:50, 9, replace = TRUE), nrow=3),
+  description = "Banská Bystrica je historické mesto v srdci Slovenska."
+)
+
+banska_bystrica_list$description      # access description
+banska_bystrica_list[["city_matrix"]] # access 3x3 matrix
+banska_bystrica_list$numeric_vector[2] # second element from vector element
+```
+
+## 2.3 Investigating Your Data Frame
+
+```{r}
+districts_df <- data.frame(
+  District = c("Centrum", "Sásová", "Radvaň", "Podlavice", "Fončorda", "Uhlisko"),
+  Population = c(16000, 23000, 15000, 8000, 18000, 9000),
+  Coastal = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
+  Development = factor(c("high", "medium", "medium", "low", "medium", "high"))
+)
+
+# first 3 rows
+head(districts_df, 3)
+
+# value from 4th row, 1st column
+districts_df[4,1]
+
+# column with logical values
+districts_df$Coastal
+
+# Logical subsetting
+df_subset <- districts_df[districts_df$Population > 10000, ]
+
+# %in% subsetting
+df_subset_2 <- districts_df[districts_df$Development %in% c("high", "low"), ]
+```
+
+## 2.4 Handling “Corrupted” Data (NA)
+
+```{r}
+# copy original data frame
+df_corrupted <- districts_df
+
+# introduce 3 NAs
+df_corrupted[2, "Population"] <- NA
+df_corrupted[5, "Development"] <- NA
+df_corrupted[3, "Coastal"] <- NA
+
+# find NAs
+sum(is.na(df_corrupted))
+colSums(is.na(df_corrupted))
+
+# calculate mean with NA
+mean(df_corrupted$Population, na.rm = TRUE)
+
+# filter NAs
+df_clean <- na.omit(df_corrupted)
+```
+
+## 2.5 Bonus Challenge: which()
+
+```{r}
+# find index of highest population
+highest_pop_index <- which.max(districts_df$Population)
+districts_df[highest_pop_index, ]
+
+# find index of lowest population
+lowest_pop_index <- which.min(districts_df$Population)
+districts_df[lowest_pop_index, ]
+```
+
+
+
+
+
+
+
+## Task 3: Expanding Your Universe
+```{r}
+# code for solving task
+# Data from: local dataset municipalities_population.csv
+```
+
+### 3.1. Loading Libraries
+```{r}
+library(dplyr)
+library(readr)
+```
+
+### 3.2. Importing the Dataset
+```{r}
+# Load the dataset (must be in your project directory)
+my_real_data <- read_csv("municipalities_population.csv")
+
+# First inspection
+glimpse(my_real_data)
+head(my_real_data)
+summary(my_real_data)
+```
+
+## 3.3. dplyr Exploration
+```{r}
+# code for solving task
+# You must ask and answer 5 questions about your dataset.
+
+
+# Question 1
+# Which 5 municipalities have the highest population?
+
+my_real_data |> 
+  select(Obec, Kraj, Pocet_obyvatelov) |> 
+  arrange(desc(Pocet_obyvatelov)) |> 
+  head(5)
+
+
+# Question 2
+# What is the average population per region (Kraj)?
+
+my_real_data |> 
+  group_by(Kraj) |> 
+  summarise(avg_population = mean(Pocet_obyvatelov, na.rm = TRUE)) |> 
+  arrange(desc(avg_population))
+
+# Question 3
+# How many municipalities are in each region?
+
+my_real_data |> 
+  group_by(Kraj) |> 
+  summarise(count = n()) |> 
+  arrange(desc(count))
+
+
+# Question 4
+# Calculate population density (population / area) 
+# and show 10 densest municipalities.
+
+my_real_data |> 
+  filter(!is.na(Pocet_obyvatelov), !is.na(Rozloha_km2)) |> 
+  mutate(hustota = Pocet_obyvatelov / Rozloha_km2) |> 
+  select(Obec, hustota) |> 
+  arrange(desc(hustota)) |> 
+  head(10)
+
+
+# Question 5
+# Which 10 municipalities have the largest area?
+
+my_real_data |> 
+  arrange(desc(Rozloha_km2)) |> 
+  select(Obec, Rozloha_km2) |> 
+  head(10)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Task 4: Building a “Toolkit” for Your Universe
+
+### 4.1. Greeting Function
+```{r}
+# Simple welcome function
+welcome_to_my_universe <- function(universe_name) {
+  cat("--------------------------------\n")
+  cat("Analysis Toolkit for", universe_name, "\n")
+  cat("Report prepared by: Your Name Here\n")
+  cat("--------------------------------\n")
+}
+
+# Call the function
+welcome_to_my_universe("Banská Bystrica Universe")
+```
+
+### 4.2. Loading Function
+```{r}
+# Function to load and inspect data
+load_and_inspect <- function(file_path) {
+  library(readr)
+  library(dplyr)
+  
+  data <- read_csv(file_path, locale = locale(encoding = "UTF-8"))
+  
+  cat("--- Data Loaded:", file_path, "---\n")
+  cat("\n--- Structure of Data ---\n")
+  print(glimpse(data))
+  cat("\n--- First 6 Rows ---\n")
+  print(head(data))
+  
+  return(data)
+}
+
+# Call the function and save output
+my_data <- load_and_inspect("municipalities_population.csv")
+```
+
+### 4.3. Query Function
+```{r}
+# Function to find municipalities with population above a threshold
+find_large_municipalities <- function(data, pop_threshold) {
+  result <- data |> 
+    filter(`Pocet_obyvatelov` > pop_threshold) |> 
+    select(`Obec`, `Kraj`, `Pocet_obyvatelov`) |> 
+    arrange(desc(`Pocet_obyvatelov`))
+  
+  return(result)
+}
+
+# Call the function for municipalities with population > 50,000
+large_municipalities <- find_large_municipalities(my_data, 50000)
+print(large_municipalities)
+```
+
+### 4.4. Reporting Function
+```{r}
+# Function to generate a report for a specific Kraj (region)
+generate_report <- function(data, region_name) {
+  
+  region_data <- data |> filter(`Kraj` == region_name)
+  
+  avg_population <- mean(region_data$Pocet_obyvatelov, na.rm = TRUE)
+  max_population <- max(region_data$Pocet_obyvatelov, na.rm = TRUE)
+  min_population <- min(region_data$Pocet_obyvatelov, na.rm = TRUE)
+  total_municipalities <- nrow(region_data)
+  
+  cat("--------------------------------\n")
+  cat("Report for region:", region_name, "\n")
+  cat("Number of municipalities:", total_municipalities, "\n")
+  cat("Average population:", round(avg_population, 2), "\n")
+  cat("Maximum population:", max_population, "\n")
+  cat("Minimum population:", min_population, "\n")
+  cat("--------------------------------\n\n")
+}
+
+# Call the reporting function for two regions
+generate_report(my_data, "Banskobystrický")
+generate_report(my_data, "Trnavský")
+```
+
+
+
+
+
+
+
+
+## Task 5: Visualising Your Universe
+
+### 5.0. Load ggplot2
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Ak ešte nie je načítané
+my_data <- read_csv("municipalities_population.csv", locale = locale(encoding = "UTF-8"))
+```
+
+### 5.1. Quick Sketch (Base R Histogram)
+```{r}
+# Histogram počtu obyvateľov
+hist(my_data$Pocet_obyvatelov,
+     main = "Rozdelenie počtu obyvateľov obcí",
+     xlab = "Počet obyvateľov",
+     col = "lightblue",
+     border = "white")
+```
+
+### 5.2. Relationship Map (ggplot2 Scatter Plot)
+```{r}
+# Scatter plot: Rozloha vs Počet obyvateľov
+ggplot(my_data, aes(x = Rozloha_km2, y = Pocet_obyvatelov)) +
+  geom_point(alpha = 0.7, size = 3, colour = "blue") +
+  geom_smooth(method = "lm", se = TRUE, colour = "gray") +
+  labs(title = "Vzťah medzi rozlohou a počtom obyvateľov",
+       subtitle = "Obce Slovenska",
+       x = "Rozloha (km2)",
+       y = "Počet obyvateľov") +
+  theme_minimal()
+```
+
+### 5.3. Comparison (ggplot2 Boxplot)
+```{r}
+# Boxplot: Počet obyvateľov podľa kraja
+ggplot(my_data, aes(x = Kraj, y = Pocet_obyvatelov, fill = Kraj)) +
+  geom_boxplot() +
+  labs(title = "Porovnanie počtu obyvateľov podľa kraja",
+       x = "Kraj",
+       y = "Počet obyvateľov") +
+  theme_light() +
+  theme(legend.position = "none") # Legenda nie je potrebná
+```
+
+### 5.4. Deep Dive (Faceting Histogram)
+```{r}
+# Histogram počtu obyvateľov s faceting podľa kraja
+ggplot(my_data, aes(x = Pocet_obyvatelov)) +
+  geom_histogram(bins = 10, fill = "coral", color = "black") +
+  facet_wrap(~ Kraj) +
+  labs(title = "Distribúcia počtu obyvateľov naprieč krajmi",
+       x = "Počet obyvateľov",
+       y = "Počet obcí") +
+  theme_minimal()
+```
+
+### 5.5. Exporting (Saving a Plot)
+```{r}
+# Uloženie scatter plotu Rozloha vs Počet obyvateľov
+scatter_plot <- ggplot(my_data, aes(x = Rozloha_km2, y = Pocet_obyvatelov)) +
+  geom_point(alpha = 0.7, size = 3, colour = "blue") +
+  geom_smooth(method = "lm", se = TRUE, colour = "gray") +
+  labs(title = "Vzťah medzi rozlohou a počtom obyvateľov",
+       x = "Rozloha (km2)",
+       y = "Počet obyvateľov") +
+  theme_minimal()
+
+# Zobrazenie grafu
+print(scatter_plot)
+
+# Uloženie do PNG
+ggsave("my_universe_plot.png", plot = scatter_plot, width = 8, height = 6)
+```
